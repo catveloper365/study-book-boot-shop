@@ -10,4 +10,5 @@ target/
 *.iml
 *.ipr
 
+# DB 연결 정보 등 노출되면 안되는 로컬 환경을 위한 설정 파일
 /src/main/resources/application-dev.properties
