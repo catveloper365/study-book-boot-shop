@@ -113,7 +113,7 @@ class ItemRepositoryTest {
 
     @Test
     @DisplayName("상품명 조회")
-    void findByItemNmTest() {
+    void findByItemNm() {
         //given
         this.createItemList();
 
@@ -131,7 +131,7 @@ class ItemRepositoryTest {
 
     @Test
     @DisplayName("상품명, 상품 상세 설명 모두 존재")
-    public void findNmOrDetailBoth() throws Exception {
+    public void findByNmOrDetailBoth() throws Exception {
         //given
         this.createItemList();
 
@@ -150,7 +150,7 @@ class ItemRepositoryTest {
 
     @Test
     @DisplayName("상품명, 상품 상세 설명 중 1개만 존재")
-    void findNmOrDetailOne() throws Exception {
+    void findByNmOrDetailOne() throws Exception {
         //given
         this.createItemList();
 
@@ -165,6 +165,41 @@ class ItemRepositoryTest {
 //        }
         assertThat(itemList.size()).isEqualTo(1);
         assertThat(findItemDetail).isEqualTo(itemList.get(0).getItemDetail());
+    }
+
+    @Test
+    @DisplayName("가격 LessThan 상품 오름차순 조회")
+    void findByPriceLessThanAsc() throws Exception {
+        //given
+        this.createItemList();
+
+        //when
+        List<Item> itemList = itemRepository.findByPriceLessThan(10005);
+
+        //then
+        for (Item item : itemList) {
+            System.out.println("item = " + item);
+        }
+        assertThat(itemList.size()).isEqualTo(4);
+        assertThat(itemList.get(0).getPrice()).isBetween(10001, 10004);
+        assertThat(itemList.get(0).getPrice()).isEqualTo(10001);
+    }
+    
+    @Test
+    @DisplayName("가격 LessThan 상품 내림차순 조회")
+    void findByPriceLessThanDesc() throws Exception {
+        //given
+        this.createItemList();
+
+        //when
+        List<Item> itemList = itemRepository.findByPriceLessThanOrderByPriceDesc(10005);
+
+        //then
+        for (Item item : itemList) {
+            System.out.println("item = " + item);
+        }
+        assertThat(itemList.size()).isEqualTo(4);
+        assertThat(itemList.get(0).getPrice()).isEqualTo(10004);
     }
 
 
