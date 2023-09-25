@@ -56,8 +56,8 @@ class ItemRepositoryTest {
         em.clear(); //DB에서 조회해오도록 영속성 컨텍스트 비워주기
 
         Optional<Item> findItem = itemRepository.findById(item.getId());
-        assertThat(item.getItemNm()).isEqualTo(findItem.orElse(null).getItemNm());
-        assertThat(item.getStockNumber()).isEqualTo(findItem.orElse(null).getStockNumber());
+        assertThat(item.getItemNm()).isEqualTo(findItem.orElseGet(Item::new).getItemNm());
+        assertThat(item.getStockNumber()).isEqualTo(findItem.orElseGet(Item::new).getStockNumber());
     }
 
     @Test
@@ -77,6 +77,8 @@ class ItemRepositoryTest {
         assertThat(removeCnt).isEqualTo(0);
         Optional<Item> findItem = itemRepository.findById(item.getId());
         assertThat(findItem).isEmpty();
+        assertThat(findItem.orElseGet(Item::new).getItemNm()).isEqualTo(null);
+        assertThat(findItem.orElseGet(Item::new).getPrice()).isEqualTo(0);
     }
 
     @Test
@@ -94,7 +96,7 @@ class ItemRepositoryTest {
 
         //then
         Optional<Item> findItem = itemRepository.findById(savedItem.getId());
-        assertThat(savedItem.getPrice()).isEqualTo(findItem.orElse(null).getPrice());
-        assertThat(savedItem.getItemSellStatus()).isEqualTo(findItem.orElse(null).getItemSellStatus());
+        assertThat(savedItem.getPrice()).isEqualTo(findItem.orElseGet(Item::new).getPrice());
+        assertThat(savedItem.getItemSellStatus()).isEqualTo(findItem.orElseGet(Item::new).getItemSellStatus());
     }
 }
