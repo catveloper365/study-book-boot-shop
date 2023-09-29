@@ -202,5 +202,54 @@ class ItemRepositoryTest {
         assertThat(itemList.get(0).getPrice()).isEqualTo(10004);
     }
 
+    @Test
+    @DisplayName("@Query, JPQL, @Param을 사용한 상품 조회")
+    void findByItemDetailByParam() throws Exception {
+        //given
+        this.createItemList();
 
+        //when
+        List<Item> itemList = itemRepository.findByItemDetailByParam("테스트");
+
+        //then
+        for (Item item : itemList) {
+            System.out.println("item = " + item);
+        }
+        assertThat(itemList.size()).isEqualTo(10);
+        assertThat(itemList.get(0).getPrice()).isEqualTo(10010);
+    }
+
+    @Test
+    @DisplayName("@Query, JPQL, ?파라미터 번호를 사용한 상품 조회")
+    void findByItemDetailByOrder() throws Exception {
+        //given
+        this.createItemList();
+
+        //when
+        List<Item> itemList = itemRepository.findByItemDetailByOrder("테스트");
+
+        //then
+        for (Item item : itemList) {
+            System.out.println("item = " + item);
+        }
+        assertThat(itemList.size()).isEqualTo(10);
+        assertThat(itemList.get(0).getPrice()).isEqualTo(10010);
+    }
+
+    @Test
+    @DisplayName("@Query, nativeQuery, @Param을 사용한 상품 조회")
+    void findByItemDetailByNative() throws Exception {
+        //given
+        this.createItemList();
+
+        //when
+        List<Item> itemList = itemRepository.findByItemDetailByNative("테스트");
+
+        //then
+        for (Item item : itemList) {
+            System.out.println("item = " + item);
+        }
+        assertThat(itemList.size()).isEqualTo(10);
+        assertThat(itemList.get(0).getPrice()).isEqualTo(10010);
+    }
 }
