@@ -54,6 +54,11 @@ public class ThymeleafExController {
         return EX_TEMPLATES_PATH_NAME + "06";
     }
 
+    @GetMapping("/ex07")
+    public String thymeleafExample07() {
+        return EX_TEMPLATES_PATH_NAME + "07";
+    }
+
     private static List<ItemDto> getItemDtoList(int totalCount) {
         List<ItemDto> itemDtoList = new ArrayList<>();
         for (int i = 1; i <= totalCount; i++) {
