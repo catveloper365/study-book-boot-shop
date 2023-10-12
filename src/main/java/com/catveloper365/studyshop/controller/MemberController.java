@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -29,7 +30,7 @@ public class MemberController {
     }
 
     @PostMapping("/new")
-    public String memberForm(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
+    public String memberForm(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, RedirectAttributes redirectAttr) {
         if (bindingResult.hasErrors()) {
             return "member/memberForm";
         }
@@ -38,8 +39,8 @@ public class MemberController {
             Member member = Member.createMember(memberFormDto, passwordEncoder);
             memberService.join(member);
         } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "member/memberForm";
+            redirectAttr.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/members/new";
         }
 
         //회원 가입 성공 시 메인 페이지로 리다이렉트
