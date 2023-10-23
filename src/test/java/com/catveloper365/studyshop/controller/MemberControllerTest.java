@@ -46,8 +46,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 성공")
-    public void loginSuccess() throws Exception {
+    @DisplayName("로그인/로그아웃 성공")
+    public void loginLogoutSuccess() throws Exception {
         //given
         String email = "test@email.com";
         String password = "1234";
