@@ -35,6 +35,17 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true); //로그아웃 후 세션을 전체 삭제할 지 여부 설정
 
+        //요청에 대한 인증/인가 설정
+        http.authorizeRequests()
+                .mvcMatchers("/css/**", "/js/**", "/img/**").permitAll() //static 디렉터리는 인증 필요없음
+                .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll() //인증 없이 모든 사용자가 접근 가능
+                .mvcMatchers("/admin/**").hasRole("ADMIN") //해당 계정이 ADMIN 권한일 때만 접근 가능
+                .anyRequest().authenticated(); //그 외 모든 요청은 인증이 필요
+
+        //인증되지 않은 사용자가 리소스에 접근했을 때 수행되는 핸들러 등록
+        http.exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
         return http.build();
     }
 
