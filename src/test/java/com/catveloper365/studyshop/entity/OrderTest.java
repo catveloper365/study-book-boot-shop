@@ -138,7 +138,7 @@ class OrderTest {
 
         System.out.println("Order class : " + savedOrderItem.getOrder().getClass());
         System.out.println("==============");
-        order.getOrderItems().get(0).getOrder().getOrderDate();
+        savedOrderItem.getOrder().getOrderDate();
         System.out.println("==============");
 
         //then
