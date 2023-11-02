@@ -51,8 +51,6 @@ class ItemRepositoryTest {
         if(itemSellStatus.equals(ItemSellStatus.SOLD_OUT)){
             item.setStockNumber(0);
         }
-        item.setRegTime(LocalDateTime.now());
-        item.setUpdateTime(LocalDateTime.now());
 //        System.out.println(item);
         return item;
     }
