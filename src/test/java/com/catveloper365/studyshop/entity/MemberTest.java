@@ -1,7 +1,6 @@
 package com.catveloper365.studyshop.entity;
 
 import com.catveloper365.studyshop.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -44,16 +40,16 @@ class MemberTest {
                 .orElseThrow(EntityNotFoundException::new);
 
         //then
-        System.out.println("savedMember.getCreateBy() = " + savedMember.getCreateBy());
+        System.out.println("savedMember.getCreateBy() = " + savedMember.getCreatedBy());
         System.out.println("savedMember.getModifiedBy() = " + savedMember.getModifiedBy());
         System.out.println("savedMember.getRegTime() = " + savedMember.getRegTime());
         System.out.println("savedMember.getUpdateTime() = " + savedMember.getUpdateTime());
 
-        assertThat(savedMember.getCreateBy()).isNotEmpty();
+        assertThat(savedMember.getCreatedBy()).isNotEmpty();
         assertThat(savedMember.getModifiedBy()).isNotEmpty();
         assertThat(savedMember.getRegTime()).isNotNull();
         assertThat(savedMember.getUpdateTime()).isNotNull();
-        assertThat(savedMember.getCreateBy()).isEqualTo(member.getCreateBy());
+        assertThat(savedMember.getCreatedBy()).isEqualTo(member.getCreatedBy());
     }
 
     @Test
