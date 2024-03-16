@@ -4,7 +4,6 @@ import com.catveloper365.studyshop.entity.ItemImg;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
-import org.springframework.ui.ModelMap;
 
 @Getter
 @Setter
