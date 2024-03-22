@@ -37,6 +37,7 @@ class ItemServiceTest {
     List<MultipartFile> createMultipartFiles() throws Exception{
         List<MultipartFile> multipartFileList = new ArrayList<>();
 
+        //가짜 Mock MultipartFile 만들기
         for (int i = 0; i < 5; i++) {
             String path = "D:/project/shop/item/";
             String imageName = "image" + i + ".jpg";
@@ -49,8 +50,9 @@ class ItemServiceTest {
 
     @Test
     @DisplayName("상품 등록 테스트")
-    @WithMockUser(username = "admin", roles = "ADMIN")
+//    @WithMockUser(username = "admin", roles = "ADMIN")
     void saveItem() throws Exception {
+        //given
         ItemFormDto itemFormDto = new ItemFormDto();
         itemFormDto.setItemNm("테스트상품");
         itemFormDto.setItemSellStatus(ItemSellStatus.SELL);
@@ -59,17 +61,21 @@ class ItemServiceTest {
         itemFormDto.setStockNumber(100);
 
         List<MultipartFile> multipartFileList = createMultipartFiles();
+
+        //when
         Long itemId = itemService.saveItem(itemFormDto, multipartFileList);
 
+        //then
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
-        Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
+        Item findItem = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
 
-        assertEquals(itemFormDto.getItemNm(), item.getItemNm());
-        assertEquals(itemFormDto.getItemSellStatus(), item.getItemSellStatus());
-        assertEquals(itemFormDto.getItemDetail(), item.getItemDetail());
-        assertEquals(itemFormDto.getPrice(), item.getPrice());
-        assertEquals(itemFormDto.getStockNumber(), item.getStockNumber());
+        assertEquals(itemFormDto.getItemNm(), findItem.getItemNm());
+        assertEquals(itemFormDto.getItemSellStatus(), findItem.getItemSellStatus());
+        assertEquals(itemFormDto.getItemDetail(), findItem.getItemDetail());
+        assertEquals(itemFormDto.getPrice(), findItem.getPrice());
+        assertEquals(itemFormDto.getStockNumber(), findItem.getStockNumber());
         assertEquals(multipartFileList.get(0).getOriginalFilename(), itemImgList.get(0).getOriImgName());
+
     }
 
 }
