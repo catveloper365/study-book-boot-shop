@@ -3,6 +3,7 @@ package com.catveloper365.studyshop.service;
 import com.catveloper365.studyshop.dto.ItemFormDto;
 import com.catveloper365.studyshop.dto.ItemImgDto;
 import com.catveloper365.studyshop.dto.ItemSearchDto;
+import com.catveloper365.studyshop.dto.MainItemDto;
 import com.catveloper365.studyshop.entity.Item;
 import com.catveloper365.studyshop.entity.ItemImg;
 import com.catveloper365.studyshop.repository.ItemImgRepository;
@@ -88,5 +89,11 @@ public class ItemService {
     @Transactional(readOnly = true)
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getAdminItemPage(itemSearchDto, pageable);
+    }
+
+    /** 메인 페이지 조회 */
+    @Transactional(readOnly = true)
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
 }
