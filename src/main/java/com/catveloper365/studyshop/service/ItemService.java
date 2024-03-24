@@ -2,11 +2,14 @@ package com.catveloper365.studyshop.service;
 
 import com.catveloper365.studyshop.dto.ItemFormDto;
 import com.catveloper365.studyshop.dto.ItemImgDto;
+import com.catveloper365.studyshop.dto.ItemSearchDto;
 import com.catveloper365.studyshop.entity.Item;
 import com.catveloper365.studyshop.entity.ItemImg;
 import com.catveloper365.studyshop.repository.ItemImgRepository;
 import com.catveloper365.studyshop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -79,5 +82,11 @@ public class ItemService {
         }
 
         return item.getId();
+    }
+
+    /** 상품 관리 페이지 조회 */
+    @Transactional(readOnly = true)
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getAdminItemPage(itemSearchDto, pageable);
     }
 }
