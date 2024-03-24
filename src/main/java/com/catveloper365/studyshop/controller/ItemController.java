@@ -100,7 +100,7 @@ public class ItemController {
 
     /** 상품 관리 페이지 이동 */
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
-    public String i(ItemSearchDto itemSearchDto,
+    public String itemManage(ItemSearchDto itemSearchDto,
                              @PathVariable("page") Optional<Integer> page, Model model) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
 
