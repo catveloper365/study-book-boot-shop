@@ -1,8 +1,13 @@
 package com.catveloper365.studyshop.controller;
 
 import com.catveloper365.studyshop.dto.ItemFormDto;
+import com.catveloper365.studyshop.dto.ItemSearchDto;
+import com.catveloper365.studyshop.entity.Item;
 import com.catveloper365.studyshop.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -90,5 +96,18 @@ public class ItemController {
             return "item/itemForm";
         }
         return "redirect:/";
+    }
+
+    /** 상품 관리 페이지 이동 */
+    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
+    public String i(ItemSearchDto itemSearchDto,
+                             @PathVariable("page") Optional<Integer> page, Model model) {
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
+
+        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
+        model.addAttribute("items", items);
+        model.addAttribute("itemSearchDto", itemSearchDto);
+        model.addAttribute("maxPage", 5);
+        return "item/itemMng";
     }
 }
