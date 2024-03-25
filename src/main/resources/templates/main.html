@@ -77,6 +77,11 @@
                         <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="200">
                         <div class="card-body">
                             <h4 class="card-title">[[${item.itemNm}]]</h4>
+                            <p class="card-text">
+                                <!-- 상품 판매 상태에 대한 배지 표시 -->
+                                <span th:if="${item.itemSellStatus == T(com.catveloper365.studyshop.constant.ItemSellStatus).SELL}" class="badge bg-primary">판매중</span>
+                                <span th:unless="${item.itemSellStatus == T(com.catveloper365.studyshop.constant.ItemSellStatus).SELL}" class="badge bg-danger">품절</span>
+                            </p>
                             <p class="card-text">[[${item.itemDetail}]]</p>
                             <h3 class="card-title text-danger">[[${item.price}]]원</h3>
                         </div>

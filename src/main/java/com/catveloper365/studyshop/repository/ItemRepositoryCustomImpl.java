@@ -97,7 +97,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                                 item.itemNm,
                                 item.itemDetail,
                                 itemImg.imgUrl,
-                                item.price)
+                                item.price,
+                                item.itemSellStatus)
                 ).from(itemImg)
                 .join(itemImg.item, item)
                 .where(itemImg.repImgYn.eq("Y"))
