@@ -49,6 +49,8 @@ public class Item extends BaseEntity {
         int restStock = this.stockNumber - orderCount; //주문 후 남은 재고 수량
         if (restStock < 0) {
             throw new OutOfStockException("상품의 재고가 부족합니다. (현재 재고 수량: " + this.stockNumber + ")");
+        } else if (restStock == 0){ //재고가 모두 소진되면 품절 상태로 변경
+            this.itemSellStatus = ItemSellStatus.SOLD_OUT;
         }
         this.stockNumber = restStock;
     }
