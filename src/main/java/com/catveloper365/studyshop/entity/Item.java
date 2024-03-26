@@ -2,6 +2,7 @@ package com.catveloper365.studyshop.entity;
 
 import com.catveloper365.studyshop.constant.ItemSellStatus;
 import com.catveloper365.studyshop.dto.ItemFormDto;
+import com.catveloper365.studyshop.exception.OutOfStockException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -42,5 +43,15 @@ public class Item extends BaseEntity {
         this.stockNumber = itemFormDto.getStockNumber();
         this.itemDetail = itemFormDto.getItemDetail();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
+
+    public void removeStock(int orderCount) {
+        int restStock = this.stockNumber - orderCount; //주문 후 남은 재고 수량
+        if (restStock < 0) {
+            throw new OutOfStockException("상품의 재고가 부족합니다. (현재 재고 수량: " + this.stockNumber + ")");
+        } else if (restStock == 0){ //재고가 모두 소진되면 품절 상태로 변경
+            this.itemSellStatus = ItemSellStatus.SOLD_OUT;
+        }
+        this.stockNumber = restStock;
     }
 }
