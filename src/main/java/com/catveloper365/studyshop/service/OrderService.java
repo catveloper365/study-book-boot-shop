@@ -1,14 +1,17 @@
 package com.catveloper365.studyshop.service;
 
 import com.catveloper365.studyshop.dto.OrderDto;
-import com.catveloper365.studyshop.entity.Item;
-import com.catveloper365.studyshop.entity.Member;
-import com.catveloper365.studyshop.entity.Order;
-import com.catveloper365.studyshop.entity.OrderItem;
+import com.catveloper365.studyshop.dto.OrderHistDto;
+import com.catveloper365.studyshop.dto.OrderItemDto;
+import com.catveloper365.studyshop.entity.*;
+import com.catveloper365.studyshop.repository.ItemImgRepository;
 import com.catveloper365.studyshop.repository.ItemRepository;
 import com.catveloper365.studyshop.repository.MemberRepository;
 import com.catveloper365.studyshop.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +26,9 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
+    private final ItemImgRepository itemImgRepository;
 
+    /** 주문 처리 */
     public Long order(OrderDto orderDto, String email) {
         //주문 상품 정보 조회
         Item item = itemRepository.findById(orderDto.getItemId())
@@ -40,5 +45,30 @@ public class OrderService {
         orderRepository.save(order);
 
         return order.getId();
+    }
+
+    /** 주문 이력 조회 */
+    @Transactional(readOnly = true)
+    public Page<OrderHistDto> getOrderList(String email, Pageable pageable) {
+        //로그인한 사용자의 주문 목록, 총 주문 횟수를 조회
+        List<Order> orders = orderRepository.findOrders(email, pageable);
+        Long totalCount = orderRepository.countOrder(email);
+
+        List<OrderHistDto> orderHistDtoList = new ArrayList<>();
+
+        //주문 이력 페이지에 전달할 DTO 객체 생성
+        for (Order order : orders) {
+            OrderHistDto orderHistDto = new OrderHistDto(order);
+
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (OrderItem orderItem : orderItems) {
+                ItemImg itemImg = itemImgRepository.findByItemIdAndRepImgYn(orderItem.getItem().getId(), "Y");
+                OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
+                orderHistDto.addOrderItemDto(orderItemDto);
+            }
+
+            orderHistDtoList.add(orderHistDto);
+        }
+        return new PageImpl<OrderHistDto>(orderHistDtoList, pageable, totalCount);
     }
 }
