@@ -6,6 +6,7 @@ import com.catveloper365.studyshop.exception.OutOfStockException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
 
+    /** 상품 정보 수정 */
     public void updateItem(ItemFormDto itemFormDto) {
         this.itemNm = itemFormDto.getItemNm();
         this.price = itemFormDto.getPrice();
@@ -45,6 +47,7 @@ public class Item extends BaseEntity {
         this.itemSellStatus = itemFormDto.getItemSellStatus();
     }
 
+    /** 주문 수량 만큼 재고 감소 */
     public void removeStock(int orderCount) {
         int restStock = this.stockNumber - orderCount; //주문 후 남은 재고 수량
         if (restStock < 0) {
@@ -53,5 +56,16 @@ public class Item extends BaseEntity {
             this.itemSellStatus = ItemSellStatus.SOLD_OUT;
         }
         this.stockNumber = restStock;
+    }
+
+    /** 주문 수량 만큼 재고 증가 */
+    public void addStock(int orderCount) {
+        this.stockNumber += orderCount;
+
+        //품절이었던 상품의 재고가 증가하면 상품 판매 상태를 판매중으로 변경
+        if (StringUtils.equals(this.itemSellStatus, ItemSellStatus.SOLD_OUT)
+                && this.stockNumber > 0) {
+            this.itemSellStatus = ItemSellStatus.SELL;
+        }
     }
 }
