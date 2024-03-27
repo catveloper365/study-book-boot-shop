@@ -1,6 +1,7 @@
 package com.catveloper365.studyshop.service;
 
 import com.catveloper365.studyshop.constant.ItemSellStatus;
+import com.catveloper365.studyshop.constant.OrderStatus;
 import com.catveloper365.studyshop.dto.OrderDto;
 import com.catveloper365.studyshop.entity.Item;
 import com.catveloper365.studyshop.entity.Member;
@@ -89,6 +90,9 @@ class OrderServiceTest {
 
         int restStock = initStock - orderDto.getCount(); //주문 후 재고 수량
         assertEquals(restStock, findItem.getStockNumber());
+
+        //case3. 주문 상태를 통해 검증
+        assertEquals(OrderStatus.ORDER, findOrder.getOrderStatus());
     }
 
     @Test
@@ -125,5 +129,33 @@ class OrderServiceTest {
                 .orElseThrow(EntityNotFoundException::new);
         assertEquals(0, findItem.getStockNumber());
         assertEquals(ItemSellStatus.SOLD_OUT, findItem.getItemSellStatus());
+    }
+
+    @Test
+    @DisplayName("주문 취소")
+    void cancelOrder() {
+        //given
+        Item item = saveItem();
+        Member member = saveMember();
+
+        int initStockNumber = item.getStockNumber();
+
+        //재고 수량 만큼 모두 주문
+        OrderDto orderDto = createOrderDto(item, initStockNumber);
+        Long orderId = orderService.order(orderDto, member.getEmail());
+
+        //when
+        orderService.cancelOrder(orderId);
+
+        //then
+        Order findOrder = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        //주문 취소를 하면 주문 상태가 취소로 변경됨
+        assertEquals(OrderStatus.CANCEL, findOrder.getOrderStatus());
+        //주문 수량 만큼 재고 수량이 다시 증가함
+        assertEquals(initStockNumber, item.getStockNumber());
+        //품절 상태인 상품을 주문 취소하면 상품 판매 상태가 판매중으로 변경됨
+        assertEquals(ItemSellStatus.SELL, item.getItemSellStatus());
     }
 }
